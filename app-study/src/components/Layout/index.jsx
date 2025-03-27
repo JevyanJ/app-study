@@ -1,10 +1,9 @@
 import { Outlet } from "react-router-dom";
 
+import "./style.sass";
+
 export const Layout = () => {
 	return (
-		<>
-			<h1>Bienvenide a tu página de tests</h1>
-			<Outlet />
-		</>
+		<Outlet />
 	);
 };

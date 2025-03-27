@@ -1,0 +1,57 @@
+@use '../../colors' as colors
+@use 'sass:color'
+
+.exam-page
+    background-color: colors.$secondary
+    length: 100vh
+    width: 90vw
+    display: flex
+    border-radius: 10px
+    box-shadow: 0 0 25px 25px rgba(0,0,0,0.2)
+    
+    form
+        flex-direction: column
+        margin: 0 auto
+        padding: 20px
+        width: 100%
+        height: 70vh
+        .questions
+            border: 1px solid black
+            background-color: color.adjust( colors.$secondary, $lightness:5% )
+            overflow-y: auto
+            max-height: 40vh
+            font-size: 1.2em
+            display: flex
+            flex-direction: column
+
+            .form-check
+                margin: 2px 0
+            
+            input
+                margin: 0 10px
+            
+            label
+                &:hover
+                    cursor: pointer
+                    font-weight: bold
+
+        .select-all
+            display: flex
+            justify-content: flex-end
+            margin: 15px 20px
+            input
+                margin: 0 10px
+
+        .actions
+            display: flex
+            flex-direction: column
+            button
+                margin: 10px auto
+                font-size: 1.2em
+
+            .info
+                display: flex
+                justify-content: center
+                color: color.adjust( colors.$primary, $space: oklch, $alpha: -0.5 )
+
+

@@ -1,95 +1,86 @@
 import React, { useState } from 'react';
+import { useStore } from '@nanostores/react';
+import { useNavigate } from 'react-router-dom';
+import { QuestionsData } from '../../questionsData';
+import Question from '../../components/question';
 import './index.sass';
 
 
 export const HomePage = () => {
-	const [questions, setQuestions] = useState([]);
-	const [nselected, setNSelected] = useState(0);
-	const [selected, setSelected] = useState([]);
+	const navigate = useNavigate();
+	const questionsStore = useStore(QuestionsData);
+	const [questionsText, setQuestionsText] = useState(questionsStore.map((question) => question.text).join("\n"));
+	const [nselected, setNselected] = useState(0);
 
-	function goToExam (e) {
-		// Prevent the browser from reloading the page
-		e.preventDefault();
-		if (questions.length === 0) {
-			alert("Sin preguntas no hay examen");
-			return;
-		}
-		setSelected([]);
-		const shuffled = questions.sort(() => 0.5 - Math.random())
-		if (nselected === 0) {
-			setSelected(shuffled)
-		} else {
-			setSelected(shuffled.slice(0, nselected));
-		}
-
-	}
-
-	function saveQuestions (e) {
+	function onChange (e) {
 		const form = e.target.form;
 		const formData = new FormData(form);
 		const formJson = Object.fromEntries(formData.entries());
-		setQuestions(formJson.questions.split("\n"));
+		setQuestionsText(formJson.questions);
+		setNselected(formJson.nselected);
 	}
 
-	function finishExam (e) {
-		// Prevent the browser from reloading the page
+	function onSubmit (e) {
 		e.preventDefault();
-		setSelected([]);
+		if (questionsText.length == 0) {
+			alert("No hay más preguntas, señoría");
+			return;
+		}
+		const questions = questionsText.split("\n").filter(val => val.length > 0);
+		const shuffled = questions.sort(() => 0.5 - Math.random())
+		const selected = nselected == 0 ? shuffled : shuffled.slice(0, nselected);
+		QuestionsData.set(questions.map((question) => {
+			return new Question(question, selected.includes(question));
+		}));
+		navigate("/exam");
 	}
 
 	return (
 		<main>
-			{selected.length === 0 && (
-				<div className="questions">
+			<div className="left">
+				<div className="instructions">
 					<p>
-						Añade las preguntas en el cuadro y selecciona cuantas quieres (deja 0 para añadir todas).<br />
-						Pulsa el botón para comenzar.
+						Añade las preguntas en el cuadro, una por línea.
 					</p>
-					<form method="post" onSubmit={goToExam}>
+					<p>
+						Luego selecciona cuantas quieres para el test. Deja 0 si las quieres todas.
+					</p>
+				</div>
+			</div>
+			<div className="right">
+				<form method="post" onSubmit={onSubmit}>
+					<div className='section'>
+						<label>
+							Preguntas:
+						</label>
 						<textarea
 							name="questions"
-							value={questions.join("\n")}
-							onChange={saveQuestions}
 							rows={4}
 							cols={40}
+							value={questionsText}
+							onChange={onChange}
 						/>
+					</div>
+					<div className='section'>
 						<label>
-							Número de preguntas a seleccionar:
+							Número de preguntas:
+						</label>
+						<div>
 							<input
 								name="nselected"
 								type="number"
 								min={0}
-								max={questions.length}
 								value={nselected}
-								onChange={(e) => setNSelected(e.target.value)}
+								onChange={onChange}
 							/>
-						</label>
-						<hr />
-						<button type="submit">¡Test!</button>
-					</form>
-				</div>
-			)}
-			{selected.length > 0 && (
-				<div className="exam">
-					<form method="post" onSubmit={finishExam}>
-						<h2>Preguntas</h2>
-						{selected.map((item, idx) => {
-							return (
-								<label key={idx}>
-									{item}
-									<input
-										type="checkbox"
-										name={`question-${idx}`}
-										id={item}
-										value={item}
-									/>
-								</label>
-							);
-						})}
-						<button type="submit">Finalizar</button>
-					</form>
-				</div>
-			)}
+						</div>
+					</div>
+					<div className='section divbutton'>
+						<button type="submit">Ir al test</button>
+					</div>
+				</form>
+			</div>
 		</main>
 	);
 };
+

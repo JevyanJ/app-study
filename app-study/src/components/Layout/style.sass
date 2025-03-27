@@ -1,0 +1,37 @@
+@use '../../colors' as colors
+@use 'sass:color'
+
+main 
+  display: flex
+  
+
+
+body 
+  font-family: 'Arial', sans-serif
+  background: radial-gradient(ellipse at bottom, colors.$primary 0%, colors.$primary 50%, color.adjust( colors.$primary, $lightness:-20% ) 100%)
+  height: 100vh
+  overflow: hidden
+  display: flex
+  justify-content: center
+  align-items: center
+
+button
+  padding: 20px
+  border-radius: 50px
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)
+  background-color: colors.$primary
+  transition-duration: 0.4s
+  color: white
+  border: none
+  cursor: pointer
+  &:hover
+      background-color: color.adjust( colors.$primary, $lightness:20% )
+      color: white
+
+a
+  color: colors.$links
+  text-decoration: none
+  &:hover
+      color: color.adjust( colors.$links, $lightness:20% )
+  &:visited
+      color: colors.$linksVisited

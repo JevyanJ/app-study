@@ -14,7 +14,8 @@
         "rvest.vs-code-prettier-eslint",
         "GitHub.copilot",
         "GitHub.copilot-chat",
-        "Syler.sass-indented"
+        "Syler.sass-indented",
+        "syler.sass-indented"
       ]
     }
   }
