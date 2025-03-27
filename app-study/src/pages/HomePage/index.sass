@@ -1,0 +1,55 @@
+@use '../../colors' as colors
+@use 'sass:color'
+
+
+
+
+.left
+    flex: 1
+    padding: 20px
+    background-color: colors.$primary
+    color: white
+    box-shadow: 0 0 25px 25px rgba(0,0,0,0.2)
+
+.right
+    flex: 2
+    flex-grow: 2
+    background-color: colors.$secondary
+    box-shadow: 0 0 25px 25px rgba(0,0,0,0.2)
+
+.instructions
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: auto
+    margin: 20px
+    
+
+form
+    display: flex
+    justify-content: space-around
+
+    .section
+        display: flex
+        flex-direction: column
+        margin: 2%
+
+        label
+            font-size: 2vh
+            margin-bottom: 8px
+
+        textarea
+            width: 100%
+            height: 70vh
+            border-radius: 5px
+            resize: none
+            overflow-y: scroll
+            overflow-x: scroll
+            white-space: nowrap
+
+    .divbutton
+        display: flex
+        justify-content: center
+        margin-top: 10px
+        button
+            font-size: 2vh
