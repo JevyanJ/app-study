@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { useNavigate } from 'react-router-dom';
-import { QuestionsData } from '../../questionsData';
+import { QuestionsData, NQuestions } from '../../questionsData';
 import Question from '../../components/question';
 import './index.sass';
 
@@ -9,8 +9,9 @@ import './index.sass';
 export const HomePage = () => {
 	const navigate = useNavigate();
 	const questionsStore = useStore(QuestionsData);
+	const nquestionsStore = useStore(NQuestions);
 	const [questionsText, setQuestionsText] = useState(questionsStore.map((question) => question.text).join("\n"));
-	const [nselected, setNselected] = useState(0);
+	const [nselected, setNselected] = useState(nquestionsStore);
 
 	function onChange (e) {
 		const form = e.target.form;
@@ -26,12 +27,13 @@ export const HomePage = () => {
 			alert("No hay más preguntas, señoría");
 			return;
 		}
-		const questions = questionsText.split("\n").filter(val => val.length > 0);
+		const questions = [...new Set(questionsText.split("\n").filter(val => val.length > 0))];
 		const shuffled = questions.sort(() => 0.5 - Math.random())
 		const selected = nselected == 0 ? shuffled : shuffled.slice(0, nselected);
 		QuestionsData.set(questions.map((question) => {
 			return new Question(question, selected.includes(question));
 		}));
+		NQuestions.set(nselected);
 		navigate("/exam");
 	}
 
@@ -43,7 +45,10 @@ export const HomePage = () => {
 						Añade las preguntas en el cuadro, una por línea.
 					</p>
 					<p>
-						Luego selecciona cuantas quieres para el test. Deja 0 si las quieres todas.
+						Luego selecciona cuantas quieres para el test.
+					</p>
+					<p>
+						Deja 0 si las quieres todas.
 					</p>
 				</div>
 			</div>
